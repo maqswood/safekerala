@@ -1,0 +1,35 @@
+{% extends 'ad_index.html' %}
+{% block content %}
+
+<body>
+<h1 class="text-dark text-center pb-5">Feedback</h1>
+
+<form action="" method="post"><table class="table table-bordered table-striped">
+  {% csrf_token %}
+  <tr>
+    <td>From</td>
+    <td><input type="date" name="textfield" id="textfield" class="form-control" required/></td>
+    <td>To</td>
+    <td><input type="date" name="textfield2" id="textfield2" class="form-control" required/></td>
+    <td><input type="submit" name="textfield3" id="textfield3" class="btn btn-success  "/></td>
+  </tr>
+</table>
+  <table class="table table-bordered table-striped">
+    <tr>
+      <td>Sno</td>
+      <td>Date</td>
+      <td>User Info</td>
+      <td>Feedback</td>
+    </tr>
+    {% for i in data %}
+    <tr>
+      <td>{{forloop.counter}}</td>
+      <td>{{i.f_date}}</td>
+      <td>{{i.u_loginid}}</td>
+      <td>{{i.f_feedback}}</td>
+    </tr>
+    {% endfor%}
+  </table>
+</form>
+</body>
+{% endblock %}}

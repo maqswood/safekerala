@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+{% extends 'usr_index.html' %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Report Against Labour</title>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="text-dark text-center pb-5">Report Against Labour</h1>
+    <form method="post" action="{% url 'user_send_report_against_labour' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="labour_id" class="form-label">Labour Id</label>
+            <input type="text" name="labour_id" id="labour_id" value="{{ labour.id }}" class="form-control" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="user_id" class="form-label">User Id</label>
+            <input type="text" name="user_id" id="user_id" value="{{ user.id }}" class="form-control" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="action_report" class="form-label">Action Report</label>
+            <textarea name="action_report" id="action_report" class="form-control" required></textarea>
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-success">Submit</button>
+        </div>
+    </form>
+</div>
+
+</body>
+{% endblock %}
+</html>

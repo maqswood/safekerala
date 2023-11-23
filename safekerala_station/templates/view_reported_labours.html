@@ -1,0 +1,30 @@
+{% extends 'stn_index.html' %}
+{% block body %}
+  <h2 class="text-dark text-center pb-5"> Reported Labors</h2>
+
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for action in reported_labours %}
+        <tr>
+          <td>{{ action.lb.lb_name }}</td>
+          <td>{{ action.lb.lb_email }}</td>
+
+          <td>
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="labor_id_to_block" value="{{ action.lb_id.id }}">
+              <button type="submit">Block</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

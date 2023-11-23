@@ -1,0 +1,73 @@
+{% extends 'stn_index.html' %}
+{% block body %}
+
+
+<body>
+<h1 class="text-dark text-center pb-5">Add New Labour</h1>
+
+<form action="{% url 'save_station_add_labour' %}" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <table class="table table-bordered table-striped">
+  <tr>
+    <td>Name</td>
+    <td>
+      <input type="text" name="Name" id="textfield"class="form-control" pattern="[A-Z//a-z// ]{3,}"/></td>
+  </tr>
+  <tr>
+    <td>Gender</td>
+      <td><input name="male" type="radio" value="male" />&nbsp; Male &nbsp;
+    
+      <input name="male" type="radio" value="female"/>&nbsp; Female</td>
+  </tr>
+  <tr>
+    <td>Phone</td>
+    <td><input type="text" name="phone" id="textfield2"class="form-control" pattern="[0-9]{10}"/></td>
+  </tr>
+  <tr>
+    <td>Email</td>
+    <td><input type="email" name="email" id="textfield3"class="form-control" required/></td>
+  </tr>
+  <tr>
+    <td>Place</td>
+    <td><input type="text" name="place" id="textfield4"class="form-control" required/></td>
+  </tr>
+  <tr>
+    <td>Post</td>
+    <td><input type="text" name="post" id="textfield5" class="form-control" required/></td>
+  </tr>
+  <tr>
+    <td>Pin</td>
+    <td><input type="text" name="pin" id="textfield6"class="form-control" required pattern="[0-9]{6}"/></td>
+  </tr>
+  <tr>
+    <td>District</td>
+    <td><input type="text" name="district" id="textfield7"class="form-control" required/></td>
+  </tr>
+  <tr>
+    <td>Catogary</td>
+    <td><input type="text" name="category" id="textfield8"class="form-control" required /></td>
+  </tr>
+  <tr>
+    <td>DOB/Age</td>
+    <td><input type="date" name="dob" id="textfield9"class="form-control" required/></td>
+  </tr>
+  <tr>
+    <td>Photo 1</td>
+    <td><label for="fileField"></label>
+      <input type="file" name="photo1" id="fileField"class="form-control" required/></td>
+  </tr>
+  <tr>
+    <td>Photo2</td>
+    <td><input type="file" name="photo2" id="fileField2"class="form-control" required/></td>
+  </tr>
+  <tr>
+    <td>Id Proof</td>
+    <td><input type="file" name="id_proof" id="fileField1"class="form-control" required/></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><input type="submit" name="button" id="button" value="Submit"class="btn btn-success  " /></td>
+</table>
+</form>
+</body>
+{% endblock %}

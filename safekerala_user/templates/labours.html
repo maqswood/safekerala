@@ -1,0 +1,46 @@
+{% extends 'usr_index.html' %}
+{% block content %}
+
+<body>
+<h1 class="text-dark text-center pb-5">Labours</h1>
+
+<form action="" method="post">
+  {% csrf_token %}
+  <table class="table table-bordered table-striped">
+  <tr>
+    <td><input type="text" name="textfield" id="textfield" class="form-control"/></td>
+    <td><input type="submit" name="textfield2" id="textfield2" value="search" class="btn btn-success  "/></td>
+  </tr>
+</table>
+  </form>
+  <table class="table table-bordered table-striped">
+  <tr>
+    <th>Sno</th>
+    <th>Station Name</th>
+    <th>Name</th>
+    <th>Contact</th>
+    <th>Address</th>
+    <th>Photo 1</th>
+    <th>Photo 2</th>
+    <th>Report</th>
+  </tr>
+      {% for i in data %}
+  <tr>
+    <td>{{forloop.counter}}</td>
+    <td>{{i.station.StationName}}</td>
+    <td>{{i.lb_name}}</td>
+    <td>{{i.lb_phone}}<br>{{i.lb_email}}</td>
+    <td>{{i.lb_place}}<br>{{i.lb_post}}<br>{{i.lb_pincode}}<br>{{i.lb_district}}</td>
+    <td><img src="{{i.lb_photo1.url}}" height="50px"/></td>
+      <td><img src="{{i.lb_photo2.url}}" height="50px"/></td>
+    <td>
+      <form action="{% url 'report_against_labour' labour_id=i.id %}#content" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-warning">Report</button>
+      </form>
+    </td>
+</tr>
+  {% endfor%}
+</table>
+</body>
+{% endblock %}}

@@ -1,0 +1,44 @@
+{% extends 'stn_index.html' %}
+{% block body %}
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+</head>
+
+<body>
+<h1 class="text-dark text-center pb-5">Complaints</h1>
+
+<form action="/station_viewcomplaint_sendreplay_post" method="post"><table class="table table-bordered table-striped">
+  <tr>
+    <td><label for="textfield"></label>
+      <input type="text" name="textfield" id="textfield"class="form-control" /></td>
+    <td><input type="submit" name="button" id="button" value="Submit"class="btn btn-success  " /></td>
+  </tr>
+</table>
+  <table class="table table-bordered table-striped">
+    <tr>
+      <td>S.No</td>
+      <td>User Id</td>
+      <td>Complaint Id</td>
+      <td>Complaint</td>
+      <td>Status</td>
+    </tr>
+     {%for i in data%}
+    <tr>
+
+      <td>{{forloop.counter}}</td>
+      <td>&nbsp;{{i.u_loginid}}</td>
+      <td>{{i.id}}</td>
+      <td>{{i.c_complaint}}</td>
+      <td>
+        {% if i.c_status == "pending" %}
+          <a href="/admin_send_reply/{{i.c_id}}"class="btn btn-success  ">Reply</a>
+        {% else %}
+          {{i.c_reply}}
+        {% endif%}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</form>
+</body>
+{% endblock %}

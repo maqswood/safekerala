@@ -1,0 +1,38 @@
+{% extends 'ad_index.html' %}
+{% block content %}
+
+<body>
+<h1 class="text-dark text-center pb-5">Labours</h1>
+
+<form action="" method="post"><table class="table table-bordered table-striped">
+  {% csrf_token %}
+  <tr>
+    <td><input type="text" name="textfield" id="textfield" class="form-control" required/></td>
+    <td><input type="submit" name="textfield2" id="textfield2" value="search" class="btn btn-success  "/></td>
+  </tr>
+</table><table class="table table-bordered table-striped">
+  <tr>
+    <th>Sno</th>
+    <th>Station Name</th>
+    <th>Name</th>
+    <th>Contact</th>
+    <th>Address</th>
+    <th>Photo 1</th>
+    <th>Photo 2</th>
+  </tr>
+      {% for i in data %}
+  <tr>
+    <td>{{forloop.counter}}</td>
+    <td>{{i.station.StationName}}</td>
+    <td>{{i.lb_name}}</td>
+    <td>{{i.lb_phone}}<br>{{i.lb_email}}</td>
+    <td>{{i.lb_place}}<br>{{i.lb_post}}<br>{{i.lb_pincode}}<br>{{i.lb_district}}</td>
+    <td><img src="{{i.lb_photo1.url}}" height="100px"/></td>
+      <td><img src="{{i.lb_photo2.url}}" height="100px"/></td>
+</tr>
+  {% endfor%}
+</table>
+
+</form>
+</body>
+{% endblock %}}

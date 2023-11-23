@@ -1,0 +1,77 @@
+{% extends 'stn_index.html' %}
+{% block body %}
+
+<body>
+<h1 class="text-dark text-center pb-5">Edit Labour Details</h1>
+
+<form action="{% url 'SaveEdit_labour' labour_id=data.id %}" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <table class="table table-bordered table-striped">
+  <tr>
+    <td>Name</td>
+    <td>
+      <input type="text" name="textfield" id="textfield" value="{{ data.lb_name }}" class="form-control" required pattern="[A-Z//a-z// ]{3,}"/></td>
+  </tr>
+  <tr>
+    <td>Gender</td>
+    <td><input name="male" type="radio" value="male" {% if data.lb_gender == "male" %} checked {% endif %} />Male<br />
+    
+      <input name="male" type="radio" value="female" {% if data.lb_gender == "female" %} checked {% endif %} />Female</td>
+  </tr>
+  <tr>
+    <td>Phone</td>
+    <td><input type="text" name="textfield2" id="textfield2"class="form-control" value="{{ data.lb_phone}}" required pattern="[0-9]{10}"/></td>
+  </tr>
+  <tr>
+    <td>Email</td>
+    <td><input type="email" name="textfield3" id="textfield3"class="form-control" value="{{ data.lb_email}}" required/></td>
+  </tr>
+  <tr>
+    <td>Place</td>
+    <td><input type="text" name="textfield4" id="textfield4"class="form-control" value="{{ data.lb_place}}" required/></td>
+  </tr>
+  <tr>
+    <td>Post</td>
+    <td><input type="text" name="textfield5" id="textfield5"class="form-control" value="{{ data.lb_post}}" re/></td>
+  </tr>
+  <tr>
+    <td>Pin</td>
+    <td><input type="text" name="textfield6" id="textfield6"class="form-control" value="{{ data.lb_pincode}}" /></td>
+  </tr>
+  <tr>
+    <td>District</td>
+    <td><input type="text" name="textfield7" id="textfield7"class="form-control" value="{{ data.lb_district}}"/></td>
+  </tr>
+  <tr>
+    <td>Category</td>
+    <td><input type="text" name="textfield8" id="textfield8"class="form-control" value="{{ data.lb_category}}"/></td>
+  </tr>
+  <tr>
+    <td>DOB/Age</td>
+    <td><input type="date" name="textfield9" id="textfield9"class="form-control" value="{{ data.lb_dob|date:'Y-m-d'}}"/></td>
+  </tr>
+  <tr>
+    <td>Photo 1</td>
+    <td>
+      <img src="{{data.lb_photo1.url}}" width="100px" height="100px"><br><br>
+      <input type="file" name="fileField" id="fileField" class="form-control" /></td>
+  </tr>
+  <tr>
+    <td>Photo2</td>
+    <td>
+      <img src="{{data.lb_photo2.url}}" width="100px" height="100px"><br><br>
+      <input type="file" name="fileField2" id="fileField2" class="form-control" /></td>
+  </tr>
+  <tr>
+    <td>Id Proof</td>
+    <td>
+      <img src="{{data.lb_id_proof.url}}" width="100px" height="100px"><br><br>
+      <input type="file" name="fileField1" id="fileField1" class="form-control"/></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><input type="submit" name="button" id="button" value="Save" class="btn btn-success  " /></td>
+</table>
+</form>
+</body>
+{% endblock %}

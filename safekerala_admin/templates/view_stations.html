@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+{% extends 'ad_index.html' %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>view_stations</title>
+</head>
+<body>
+<div style="text-align:center;">
+    <h1>Station Details</h1>
+    <table class="table table-bordered table-striped">
+        <form action="" method="post">
+          {% csrf_token %}
+          <tr>
+            <td><input type="text" name="textfield" id="textfield" class="form-control" placeholder="search by station name" required/></td>
+            <td><input type="submit" name="textfield2" id="textfield2" value="search" class="btn btn-success  "/></td>
+          </tr>
+        </form>
+    </table>
+<table class="table table-bordered table-striped" width="100%">
+    <tr>
+      <th>Sno</th>
+      <th>Name</th>
+      <th>phone</th>
+      <th>E-mail</th>
+      <th>place</th>
+      <th>post</th>
+      <th>pin</th>
+      <th>district</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
+        <th>Edit</th>
+    </tr>
+
+    {% for i in data %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{i.StationName}}</td>
+        <td>{{i.Phone}}</td>
+        <td>{{i.Email}}</td>
+        <td>{{i.Place}}</td>
+        <td>{{i.Post}}</td>
+        <td>{{i.Pin}}</td>
+        <td>{{i.District}}</td>
+        <td>{{i.Latitude}}</td>
+        <td>{{i.Longitude}}</td>
+        <td>
+            <form action="{% url 'Edit_stations' data_id=i.id %}#content" >
+                <button class="btn btn-danger">Edit</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+  </table>
+    </div>
+</body>
+</html>
+{% endblock %}

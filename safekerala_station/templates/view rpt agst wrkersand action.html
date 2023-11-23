@@ -1,0 +1,33 @@
+{% extends 'stn_index.html' %}
+{% block body %}
+<body>
+<h1 class="text-dark text-center pb-5">Reports</h1>
+
+<form action="" method="post"><table class="table table-bordered table-striped">
+  <tr>
+    <td><label for="textfield"></label>
+      <input type="text" name="textfield" id="textfield" class="form-control" /></td>
+    <td><input type="submit" name="button" id="button" value="Search" class="btn btn-success" /></td>
+  </tr>
+</table>
+  <table class="table table-bordered table-striped">
+    <tr>
+      <td width="40">S.No</td>
+      <td width="61">Labour Info</td>
+      <td width="21">User Id</td>
+      <td width="54">Report</td>
+      <td width="130">Status</td>
+    </tr>
+    {% for i in data %}
+    <tr>
+      <td>{{forloop.counter}}</td>
+      <td>{{i.lb_name}}&nbsp;</td>
+      <td>&nbsp;{{i.u_name}}</td>
+      <td>{{i.a_report}}&nbsp;</td>
+      <td><a href="{% url 'view_rpt_agst_worker_andtakeaction' a_id=i.a_id%}"class="btn btn-success  ">Action</a></td>
+    </tr>
+    {%  endfor %}
+  </table>
+</form>
+</body>
+{% endblock %}

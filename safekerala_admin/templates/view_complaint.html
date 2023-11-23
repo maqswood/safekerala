@@ -1,0 +1,48 @@
+<!doctype html>
+{% extends 'ad_index.html' %}
+{% block content %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<h1 class="text-dark text-center pb-5">Complaints</h1>
+
+<form action="" method="post"><table class="table table-bordered table-striped">
+  {% csrf_token %}
+  <tr>
+    <td>From</td>
+    <td><input type="date" name="textfield" id="textfield" class="form-control" required/></td>
+    <td>To</td>
+    <td><input type="date" name="textfield2" id="textfield2" class="form-control" required/></td>
+    <td><input type="submit" name="textfield3" id="textfield3" value="search" class="btn btn-success  "/></td>
+  </tr>
+</table>
+  <table class="table table-bordered table-striped">
+    <tr>
+      <th>Sno</th>
+      <th>Date</th>
+      <th>User Info</th>
+      <th>Complaint</th>
+      <th>Status</th>
+      <th>Reply</th>
+    </tr>
+    {% for i in data %}
+    <tr>
+      <td>{{forloop.counter}}</td>
+      <td>{{i.c_date}}</td>
+      <td>&nbsp;{{i.u_name}}</td>
+      <td>&nbsp;{{i.c_complaint}}</td>
+      <td>&nbsp;{{i.c_status}}</td>
+      <td>&nbsp;{{i.c_reply}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</form>
+</body>
+</html>
+{% endblock %}

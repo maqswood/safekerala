@@ -1,0 +1,55 @@
+{% extends 'stn_index.html' %}
+{% block body %}
+
+<body>
+<h1 class="text-dark text-center pb-5">Criminals</h1>
+
+<form action="" method="post">
+  {% csrf_token %}
+  <table class="table table-bordered table-striped">
+  <tr>
+    <td><input type="text" name="textfield" id="textfield" class="form-control" required/></td>
+    <td><input type="submit" name="textfield2" id="textfield2" value="search" class="btn btn-success  "/></td>
+  </tr>
+  </table>
+</form>
+<table class="table table-bordered table-striped">
+  <tr>
+    <td width="15">S.No</td>
+    <td width="15">Criminal Name</td>
+    <td width="15">Gender</td>
+    <td width="15">Photo1</td>
+    <td width="15">Photo2</td>
+    <td width="15">Address</td>
+    <td width="15">DOB</td>
+    <td width="15">Identification mark</td>
+    <td width="15">Delete</td>
+    <td width="15">Edit</td>
+
+  </tr>
+  {% for i in data %}
+  <tr>
+    <td>{{forloop.counter}}&nbsp;</td>
+    <td>{{i.cr_name}}&nbsp;</td>
+    <td>{{i.cr_gender}}</td>
+    <td><img src="{{i.cr_photo1.url}}" height="100px"></td>
+    <td>&nbsp;<img src="{{i.cr_photo2.url}}" height="100px"></td>
+    <td>{{i.cr_place}}<br>{{i.cr_post}}<br>{{i.cr_district}}<br>{{i.cr_pincode}}</td>
+    <td>{{i.cr_dob}}</td>
+    <td>1.{{i.cr_identification_mark1}}<br>
+    2.{{i.cr_identification_mark2}}</td>
+    <td>
+      <form action="{% url 'DeleteCriminal' criminal_id=i.id %}#content" style="display: inline-block;">
+        <button type="submit" class="btn btn-danger">delete</button>
+      </form>
+    </td>
+    <td>
+      <form action="{% url 'EditCriminal' criminal_id=i.id %}#content" style="display: inline-block;">
+        <button type="submit" class="btn btn-success">Edit</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+</body>
+{% endblock %}
