@@ -1,25 +1,33 @@
 {% extends 'stn_index.html' %}
+{% load custom_filters %}
 {% block body %}
   <h2 class="text-dark text-center pb-5"> Reported Labors</h2>
 
   <table class="table table-bordered table-striped">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Actions</th>
+        <th>S.No</th>
+        <th>Labour Name</th>
+        <th>User Name</th>
+        <th>Report</th>
+        <th>status</th>
+        <th>block</th>
       </tr>
     </thead>
     <tbody>
-      {% for action in reported_labours %}
+      {% for action in reports %}
         <tr>
-          <td>{{ action.lb.lb_name }}</td>
-          <td>{{ action.lb.lb_email }}</td>
-
+          <td>{{ forloop.counter }}</td>
+          <td>{{ action.labor.lb_name }}</td>
+          <td>{{ action.user.username }}</td>
+          <td>{{ action.report_text }}</td>
+          {% with action_data=data|dictlookup:action.labor.id %}
+                <td>{{ action_data.a_status|default:"" }}</td>
+            {% endwith %}
           <td>
             <form method="post">
               {% csrf_token %}
-              <input type="hidden" name="labor_id_to_block" value="{{ action.lb_id.id }}">
+              <input type="hidden" name="labor_id_to_block" value="{{ action.id }}">
               <button type="submit">Block</button>
             </form>
           </td>

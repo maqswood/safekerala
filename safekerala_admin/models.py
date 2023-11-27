@@ -83,7 +83,13 @@ class NotificationDB(models.Model):
 
 
 class ActionDB(models.Model):
-    lb = models.ForeignKey(LabourDB, on_delete=models.CASCADE, null=True)
+    labor = models.ForeignKey(LabourDB, on_delete=models.CASCADE, null=True)
     u_loginid = models.ForeignKey(UserDB, on_delete=models.CASCADE, null=True)
     a_status = models.CharField(max_length=10, null=True, blank=True)
-    a_report = models.CharField(max_length=50, null=True, blank=True)
+    # report = models.ForeignKey('ReportDB', on_delete=models.CASCADE, related_name='action_reports')
+
+
+class ReportDB(models.Model):
+    labor = models.ForeignKey(LabourDB, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(UserDB, on_delete=models.CASCADE)
+    report_text = models.TextField()

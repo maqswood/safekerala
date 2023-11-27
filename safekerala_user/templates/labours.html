@@ -34,8 +34,9 @@
     <td><img src="{{i.lb_photo1.url}}" height="50px"/></td>
       <td><img src="{{i.lb_photo2.url}}" height="50px"/></td>
     <td>
-      <form action="{% url 'report_against_labour' labour_id=i.id %}#content" method="post">
+      <form action="{% url 'report_labor' labor_id=i.id %}#content" method="post">
         {% csrf_token %}
+        <textarea name="report_text" required hidden>blocked</textarea>
         <button type="submit" class="btn btn-warning">Report</button>
       </form>
     </td>

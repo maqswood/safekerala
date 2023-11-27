@@ -2,8 +2,7 @@ from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
-
-from safekerala_admin.models import LabourDB, CriminalDB, ComplaintDB, FeedbackDB, NotificationDB, StationsDB, ActionDB
+from safekerala_admin.models import LabourDB, CriminalDB, ComplaintDB, FeedbackDB, NotificationDB, StationsDB, ActionDB,ReportDB
 
 
 # Create your views here.
@@ -68,7 +67,6 @@ def SaveEdit_labour(req, labour_id):
         dob = req.POST.get('textfield9')
         station_id = req.session.get('station_id')
         station = StationsDB.objects.get(id=station_id)
-
 
         try:
             photo1 = req.FILES['fileField']
@@ -207,28 +205,29 @@ def DeleteCriminal(req, criminal_id):
     return redirect(station_view_criminal)
 
 
+
 def view_reported_labours_and_take_action(request):
-    # Assuming you have user authentication and user_id stored in the session
-    user_id = request.session.get('user_id')
+    station_id = request.session.get('station_id')
+    reports = ReportDB.objects.filter(report_text='blocked', labor__station=station_id)
+    Action=ActionDB.objects.all()
 
-    # Retrieve reported labors for the logged-in user
-    reported_labours = ActionDB.objects.filter(u_loginid=user_id, a_status='reported').select_related('lb')
-
-    if request.method == 'POST':
-        # Handle the action taken, e.g., blocking the labor
-        labor_id_to_block = request.POST.get('labor_id_to_block')
+    if request.method == "POST":
+        report_id = request.POST.get('labor_id_to_block')
 
         try:
-            labor_to_block = LabourDB.objects.get(id=labor_id_to_block)
-            # Perform the action, e.g., update the status to 'blocked'
-            ActionDB.objects.filter(lb_id=labor_to_block).update(a_status='blocked')
-            messages.success(request, f"Labor {labor_to_block.lb_name} has been blocked.")
-        except LabourDB.DoesNotExist:
-            messages.error(request, "Labor not found.")
+            data = get_object_or_404(ReportDB, id=report_id)
+            u_instance = data.user  # Use the instance, not the ID
+            lb_instance = data.labor  # Use the instance, not the ID
+            action = 'blocked'
 
-        return redirect('view_reported_labours_and_take_action')
+            obj = ActionDB(labor=lb_instance, u_loginid=u_instance, a_status=action)
+            obj.save()
 
-    return render(request, 'view_reported_labours.html', {'reported_labours': reported_labours})
+        except ReportDB.DoesNotExist:
+            # Handle the case where the specified report_id does not exist
+            pass
+
+    return render(request, "view_reported_labours.html", {'reports': reports,'data':Action})
 
 
 def station_viewcomplaint_sendreplay(req):
