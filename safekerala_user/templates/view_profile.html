@@ -38,10 +38,18 @@
       </tr>
       <tr>
         <td>photo</td>
-        <td><img src="{{data.photo.url}}"></td>
+        <td><img src="{{data.photo.url}}" width="250px" height="250px"></td>
       </tr>
 
     </table>
   </form>
+  <div class="justify-content-center mt-5" style="display:flex;">
+    <form action="{% url 'user_edit_profile' %}#content">
+      <button type="submit" class="btn btn-danger " style="width:100px;">Edit</button>
+    </form>
+    <form action="{% url 'delete_usr_account' %}">
+      <button type="submit" class="btn btn-warning ms-3" style="width:180px;">Delete you account</button>
+    </form>
+  </div>
 </body>
 {% endblock %}

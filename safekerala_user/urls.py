@@ -8,6 +8,9 @@ urlpatterns=[
     path('labours/',views.labours,name="labours"),
     path('report_labor/<int:labor_id>/',views.report_labor,name="report_labor"),
     path('user_view_profile/',views.user_view_profile,name="user_view_profile"),
+    path('user_edit_profile/',views.user_edit_profile,name="user_edit_profile"),
+    path('save_user_edit_profile/',views.save_user_edit_profile,name="save_user_edit_profile"),
+    path('delete_usr_account/',views.delete_usr_account,name="delete_usr_account"),
     path('user_change_password/',views.user_change_password,name="user_change_password"),
 
 ]

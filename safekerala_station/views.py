@@ -2,7 +2,8 @@ from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
-from safekerala_admin.models import LabourDB, CriminalDB, ComplaintDB, FeedbackDB, NotificationDB, StationsDB, ActionDB,ReportDB
+from safekerala_admin.models import LabourDB, CriminalDB, ComplaintDB, FeedbackDB, NotificationDB, StationsDB, ActionDB, \
+    ReportDB
 
 
 # Create your views here.
@@ -70,21 +71,29 @@ def SaveEdit_labour(req, labour_id):
 
         try:
             photo1 = req.FILES['fileField']
-            photo2 = req.FILES['fileField2']
-            id_proof = req.FILES['fileField1']
-
             fs = FileSystemStorage()
-
             file1 = fs.save(photo1.name, photo1)
+        except MultiValueDictKeyError:
+            file1 = LabourDB.objects.get(id=labour_id).lb_photo1
+
+        try:
+
+            photo2 = req.FILES['fileField2']
+            fs = FileSystemStorage()
             file2 = fs.save(photo2.name, photo2)
-            file3 = fs.save(id_proof.name, id_proof)
+
         except MultiValueDictKeyError:
             # If the files are not provided in the form, use existing files for the update
-            file1 = LabourDB.objects.get(id=labour_id).lb_photo1
+
             file2 = LabourDB.objects.get(id=labour_id).lb_photo2
+
+        try:
+            id_proof = req.FILES['fileField1']
+            fs = FileSystemStorage()
+            file3 = fs.save(id_proof.name, id_proof)
+        except MultiValueDictKeyError:
             file3 = LabourDB.objects.get(id=labour_id).lb_id_proof
 
-        print("Before update query")
         LabourDB.objects.filter(id=labour_id).update(
             lb_name=name, lb_email=email, lb_phone=phone, lb_id_proof=file3,
             lb_place=place, lb_post=post, lb_district=district, lb_pincode=pin,
@@ -175,19 +184,20 @@ def SaveEditCriminal(req, criminal_id):
         station = StationsDB.objects.get(id=station_id)
         try:
             photo1 = req.FILES['imageField']
+            fs = FileSystemStorage()
+            file1 = fs.save(photo1.name, photo1)
+        except MultiValueDictKeyError:
+            file1 = CriminalDB.objects.get(id=criminal_id).cr_photo1
+        try:
             photo2 = req.FILES['imageField2']
             fs = FileSystemStorage()
-            file = fs.save(photo1.name, photo1)
             file2 = fs.save(photo2.name, photo2)
         except MultiValueDictKeyError:
-            # If the files are not provided in the form, use existing files for the update
-            existing_criminal = CriminalDB.objects.get(id=criminal_id)
-            file = existing_criminal.cr_photo1
-            file2 = existing_criminal.cr_photo2
+            file2 = CriminalDB.objects.get(id=criminal_id).cr_photo2
 
         CriminalDB.objects.filter(id=criminal_id).update(
             cr_name=name, cr_phone=phone, cr_place=place, cr_post=post,
-            cr_district=district, cr_pincode=pin, cr_photo1=file,
+            cr_district=district, cr_pincode=pin, cr_photo1=file1,
             cr_photo2=file2, cr_gender=gender, cr_dob=dob,
             cr_identification_mark1=cr_identification_mark1,
             cr_identification_mark2=cr_identification_mark2,
@@ -205,29 +215,46 @@ def DeleteCriminal(req, criminal_id):
     return redirect(station_view_criminal)
 
 
-
 def view_reported_labours_and_take_action(request):
     station_id = request.session.get('station_id')
+
+    # Get reported labors with the status 'blocked'
     reports = ReportDB.objects.filter(report_text='blocked', labor__station=station_id)
-    Action=ActionDB.objects.all()
+    Action = ActionDB.objects.all()
 
     if request.method == "POST":
         report_id = request.POST.get('labor_id_to_block')
+        is_blocked = request.POST.get('is_blocked')
 
         try:
             data = get_object_or_404(ReportDB, id=report_id)
-            u_instance = data.user  # Use the instance, not the ID
-            lb_instance = data.labor  # Use the instance, not the ID
+            u_instance = data.user
+            lb_instance = data.labor
             action = 'blocked'
 
             obj = ActionDB(labor=lb_instance, u_loginid=u_instance, a_status=action)
             obj.save()
 
+            # After blocking the labor, update the report status to 'resolved'
+            data.report_text = 'resolved'
+            data.save()
+            if is_blocked:
+                # Update the LabourDB record to indicate it is blocked
+                LabourDB.objects.filter(id=lb_instance.id).update(is_blocked=True)
+
+                # Optional: You may want to delete the LabourDB record entirely after moving it to BlockedLabourDB
+                LabourDB.objects.filter(id=lb_instance.id).delete()
+
+            else:
+                # Update the LabourDB record if it is not blocked
+                LabourDB.objects.filter(id=lb_instance.id).update(is_blocked=False)
+
+
         except ReportDB.DoesNotExist:
             # Handle the case where the specified report_id does not exist
             pass
 
-    return render(request, "view_reported_labours.html", {'reports': reports,'data':Action})
+    return render(request, "view_reported_labours.html", {'reports': reports, 'data': Action})
 
 
 def station_viewcomplaint_sendreplay(req):

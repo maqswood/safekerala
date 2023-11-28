@@ -61,6 +61,24 @@ class LabourDB(models.Model):
     lb_gender = models.CharField(max_length=5, blank=True, null=True)
     lb_dob = models.DateField(null=True, blank=True)
     station = models.ForeignKey(StationsDB, on_delete=models.CASCADE, null=True, blank=True)
+    is_blocked = models.BooleanField(default=False)
+
+
+class BlockedLabourDB(models.Model):
+    lb_name = models.CharField(max_length=50, blank=True, null=True)
+    lb_email = models.EmailField(max_length=50, blank=True, null=True)
+    lb_phone = models.IntegerField(null=True, blank=True)
+    lb_id_proof = models.FileField(upload_to="blocked_labour_id_proof", null=True, blank=True)
+    lb_place = models.CharField(max_length=50, blank=True, null=True)
+    lb_post = models.CharField(max_length=50, blank=True, null=True)
+    lb_district = models.CharField(max_length=50, blank=True, null=True)
+    lb_pincode = models.IntegerField(null=True, blank=True)
+    lb_photo1 = models.ImageField(upload_to="blocked_labour_photo", null=True, blank=True)
+    lb_photo2 = models.ImageField(upload_to="blocked_labour_photo", null=True, blank=True)
+    lb_category = models.CharField(max_length=50, blank=True, null=True)
+    lb_gender = models.CharField(max_length=5, blank=True, null=True)
+    lb_dob = models.DateField(null=True, blank=True)
+    station = models.ForeignKey(StationsDB, on_delete=models.CASCADE, null=True, blank=True)
 
 
 class ComplaintDB(models.Model):

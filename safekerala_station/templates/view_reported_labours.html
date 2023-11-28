@@ -10,7 +10,6 @@
         <th>Labour Name</th>
         <th>User Name</th>
         <th>Report</th>
-        <th>status</th>
         <th>block</th>
       </tr>
     </thead>
@@ -21,14 +20,12 @@
           <td>{{ action.labor.lb_name }}</td>
           <td>{{ action.user.username }}</td>
           <td>{{ action.report_text }}</td>
-          {% with action_data=data|dictlookup:action.labor.id %}
-                <td>{{ action_data.a_status|default:"" }}</td>
-            {% endwith %}
           <td>
             <form method="post">
               {% csrf_token %}
               <input type="hidden" name="labor_id_to_block" value="{{ action.id }}">
-              <button type="submit">Block</button>
+              <input type="hidden" name="is_blocked" value="{{True}}">
+              <button type="submit" class="btn btn-danger">Block</button>
             </form>
           </td>
         </tr>

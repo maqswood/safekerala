@@ -1,13 +1,17 @@
+# Standard library imports
+from datetime import datetime
+
+# Third-party imports
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-from safekerala_admin.models import StationsDB, CriminalDB, LabourDB, ComplaintDB, FeedbackDB, NotificationDB,UserDB
+
+# Your app/module imports
+from safekerala_admin.models import StationsDB, CriminalDB, LabourDB, ComplaintDB, FeedbackDB, NotificationDB, UserDB
 from safekerala_station.views import stn_index
 from safekerala_user.views import usr_registration, usr_index
-from datetime import datetime
-from django.contrib.auth.decorators import login_required
-
 
 # Create your views here.
 
