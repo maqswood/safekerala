@@ -1,5 +1,5 @@
 # Standard library imports
-from datetime import datetime
+from datetime import datetime, date
 
 # Third-party imports
 from django.contrib import messages
@@ -12,6 +12,7 @@ from django.shortcuts import render, redirect
 from safekerala_admin.models import StationsDB, CriminalDB, LabourDB, ComplaintDB, FeedbackDB, NotificationDB, UserDB
 from safekerala_station.views import stn_index
 from safekerala_user.views import usr_registration, usr_index
+
 
 # Create your views here.
 
@@ -198,12 +199,12 @@ def view_criminal(req):
 
 
 def view_labour(req):
-    data = LabourDB.objects.all().select_related('station')
+    data = LabourDB.objects.all()
     query = req.POST.get('textfield')
     if query:
         data = data.filter(lb_name__icontains=query)
 
-    return render(req, "view labour.html", {'data': data})
+    return render(req, "view_labour.html", {'data': data})
 
 
 def view_complaint(req):
@@ -225,6 +226,27 @@ def view_complaint(req):
     return render(req, "view_complaint.html", {'data': data})
 
 
+def reply_to_complaint(req, complaint_id):
+    complaint_id = complaint_id
+    return render(req, "send_reply_to_complaint.html", {'complaint_id': complaint_id})
+
+
+def send_reply_to_complaint(request, complaint_id):
+    if request.method == 'POST':
+        reply_text = request.POST.get('reply_text')
+
+        # Get the complaint instance
+        complaint = ComplaintDB.objects.get(id=complaint_id)
+
+        # Save the reply to the complaint
+        complaint.c_reply = reply_text
+        complaint.c_status = 'Replied'
+        complaint.save()
+
+        messages.success(request, 'Reply sent successfully.')
+        return redirect(view_complaint)
+
+
 def view_feedback(req):
     data = FeedbackDB.objects.all()
     if req.method == "POST":
@@ -244,10 +266,47 @@ def view_feedback(req):
     return render(req, "view_feedback.html", {'data': data})
 
 
-def send_notification(req):
-    return render(req, "notification.html")
+def send_notification(request):
+    if request.method == 'POST':
+        notification_text = request.POST.get('textarea')
+
+        # Get the current date
+        current_date = date.today()
+
+        # Create a ComplaintDB object with the user information, complaint text, and current date
+        NotificationDB.objects.create(
+            n_date=current_date,
+            n_content=notification_text
+        )
+
+        messages.success(request, 'Complaint submitted successfully.')
+        return redirect('send_notification')
+
+    return render(request, 'notification.html')
 
 
-def view_notification(req):
+def view_notification_admin(req):
     data = NotificationDB.objects.all()
+    if req.method == "POST":
+        from_date_str = req.POST.get('textfield')
+        to_date_str = req.POST.get('textfield2')
+
+        if from_date_str and to_date_str:
+            from_date = datetime.strptime(from_date_str, '%Y-%m-%d').date()
+            to_date = datetime.strptime(to_date_str, '%Y-%m-%d').date()
+
+            data = NotificationDB.objects.filter(n_date__range=[from_date, to_date])
+        else:
+            data = NotificationDB.objects.all()
+
+        return render(req, "view_notification.html", {'data': data})
+
     return render(req, "view_notification.html", {'data': data})
+
+
+def Delete_notification(req, notification_id):
+    notification_data = NotificationDB.objects.filter(id=notification_id)
+    notification_data.delete()
+    messages.error(req, "deleted successfully")
+    return redirect(view_notification_admin)
+

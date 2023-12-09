@@ -26,6 +26,7 @@
   <link href="{% static 'vendor/remixicon/remixicon.css' %}" rel="stylesheet">
   <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
   <link href="{% static 'css\style.css' %}" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/5c23664b7a.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -38,10 +39,18 @@
 
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a class="nav-link " href="#">Home</a></li>
+          <li><a class="nav-link " href="{% url 'usr_index' %}">Home</a></li>
           <li class="dropdown"><a href="{% url 'police_stations' %}#content"><span>Police Stations</span> </a></li>
           <li class="dropdown"><a href="{% url 'criminals' %}#content"><span>Criminals</span> </a>
           <li class="dropdown"><a href="{% url 'labours' %}#content"><span>Labours</span> </a>
+          <li class="dropdown"><a href="#"><span>Complaint</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="{% url 'send_complaint' %}#content">Send</a></li>
+              <li><a href="{% url 'view_response' %}#content">view reply</a></li>
+            </ul>
+          </li>
+          <li><a href="{% url 'send_feedback' %}#content"><span>Feedback</span></a> </li>
+          <li><a href="{% url 'view_notification_usr' %}#content"> <span>Notification</span><i class="fa-regular fa-bell" style="color:white;"></i></a></li>
           <li class="dropdown"><a href="#"><span>Profile</span> <i class="bi bi-chevron-down"></i></a>
             <ul>
               <li><a href="{% url 'user_view_profile' %}#content">View</a></li>
@@ -49,10 +58,11 @@
             </ul>
           </li>
           <li>
-            {% if usr_name %}
-              <a href="#">Welcome, {{ usr_name }}!</a>
+            {% if request.session.usr_name %}
+              <a href="#">Welcome, {{ request.session.usr_name }}!</a>
             {% endif %}
           </li>
+
           <li><a class="getstarted scrollto" href="{% url 'LogoutUser' %}">Logout</a></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>

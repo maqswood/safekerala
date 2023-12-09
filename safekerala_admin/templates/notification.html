@@ -12,7 +12,8 @@
 <body>
 <h1 class="text-dark text-center pb-5">Send Notification</h1>
 
-<form id="form1" name="form1" method="post" action="/send_notification_post">
+<form id="form1" name="form1" method="post" action="">
+  {% csrf_token %}
   <table class="table table-bordered table-striped">
     <tr>
       <td>

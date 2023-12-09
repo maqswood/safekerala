@@ -39,5 +39,14 @@
 
     </table>
   </form>
+<div class="justify-content-center mt-5" style="display:flex;">
+    <form action="{% url 'station_edit_profile' %}#content" method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger " style="width:100px;">Edit</button>
+    </form>
+    <form action="{% url 'station_change_password' %}">
+      <button type="submit" class="btn btn-warning ms-3" style="width:180px;">Change Password</button>
+    </form>
+  </div>
 </body>
 {% endblock %}

@@ -6,39 +6,35 @@
 
 <body>
 <h1 class="text-dark text-center pb-5">Complaints</h1>
-
-<form action="/station_viewcomplaint_sendreplay_post" method="post"><table class="table table-bordered table-striped">
-  <tr>
-    <td><label for="textfield"></label>
-      <input type="text" name="textfield" id="textfield"class="form-control" /></td>
-    <td><input type="submit" name="button" id="button" value="Submit"class="btn btn-success  " /></td>
-  </tr>
-</table>
   <table class="table table-bordered table-striped">
-    <tr>
-      <td>S.No</td>
-      <td>User Id</td>
-      <td>Complaint Id</td>
-      <td>Complaint</td>
-      <td>Status</td>
-    </tr>
+    <thead>
+      <tr>
+        <th>S.No</th>
+        <th>User Name</th>
+        <th>Complaint Id</th>
+        <th>Complaint</th>
+        <th>Reply</th>
+      </tr>
+    </thead>
      {%for i in data%}
     <tr>
 
       <td>{{forloop.counter}}</td>
-      <td>&nbsp;{{i.u_loginid}}</td>
+      <td>&nbsp;{{i.u_loginid.username}}</td>
       <td>{{i.id}}</td>
       <td>{{i.c_complaint}}</td>
       <td>
-        {% if i.c_status == "pending" %}
-          <a href="/admin_send_reply/{{i.c_id}}"class="btn btn-success  ">Reply</a>
+        {% if i.c_reply == None %}
+        <form action="{% url 'reply_to_complaint_stn' complaint_id=i.id %}#body" method="post">
+          {% csrf_token %}
+          <button class="btn btn-primary">Reply</button>
+        </form>
         {% else %}
-          {{i.c_reply}}
-        {% endif%}
+        {{i.c_reply}}
+      {% endif %}
       </td>
     </tr>
     {% endfor %}
   </table>
-</form>
 </body>
 {% endblock %}

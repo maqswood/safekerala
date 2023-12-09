@@ -18,6 +18,11 @@ urlpatterns=[
     path('view_reported_labours_and_take_action/',views.view_reported_labours_and_take_action,name="view_reported_labours_and_take_action"),
     path('station_viewcomplaint_sendreplay/',views.station_viewcomplaint_sendreplay,name="station_viewcomplaint_sendreplay"),
     path('station_view_feedback/',views.station_view_feedback,name="station_view_feedback"),
+    path('reply_to_complaint_stn/<int:complaint_id>/',views.reply_to_complaint_stn,name="reply_to_complaint_stn"),
+    path('send_reply_to_complaint_stn/<int:complaint_id>/',views.send_reply_to_complaint_stn,name="send_reply_to_complaint_stn"),
     path('station_view_notification/',views.station_view_notification,name="station_view_notification"),
     path('station_view_profile/',views.station_view_profile,name="station_view_profile"),
+    path('station_edit_profile/',views.station_edit_profile,name="station_edit_profile"),
+    path('save_station_edit_profile/',views.save_station_edit_profile,name="save_station_edit_profile"),
+    path('station_change_password/',views.station_change_password,name="station_change_password"),
 ]

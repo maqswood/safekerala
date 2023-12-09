@@ -1,10 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'usr_index.html' %}
+{% block content %}
+  <h2 class="text-dark text-center pb-5">Send Feedback</h2>
 
-</body>
-</html>
+  <form method="post">
+    {% csrf_token %}
+    <textarea name="feedback_text" rows="4" cols="50" placeholder="Enter your Feedback"></textarea>
+    <br>
+    <button type="submit" class="btn btn-success">Submit Feedback</button>
+  </form>
+{% endblock %}

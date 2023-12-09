@@ -55,15 +55,8 @@
               <li><a href="{% url 'AddStation' %}#content">Add</a></li>
               <li><a href="{% url 'view_stations' %}#content">View</a></li>
             </ul>
-           <li class="dropdown"><a href="#"><span>Criminal</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-                <li><a href="{% url 'view_criminal' %}#content">View</a></li>
-            </ul>
-            <li class="dropdown"><a href="#"><span>Labour</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-                <li><a href="{% url 'view_labour' %}#content">View</a></li>
-            </ul>
-
+           <li class="dropdown"><a href="{% url 'view_criminal' %}#content"><span>Criminals</span> </a>
+            <li class="dropdown"><a href="{% url 'view_labour' %}#content"><span>Labours</span> </a>
             <li class="dropdown"><a href="#"><span>Complaint</span> <i class="bi bi-chevron-down"></i></a>
             <ul>
                 <li><a href="{% url 'view_complaint' %}#content">View</a></li>
@@ -75,7 +68,7 @@
               <li class="dropdown"><a href="#"><span>Notification</span> <i class="bi bi-chevron-right"></i></a>
                 <ul>
                   <li><a href="{% url 'send_notification' %}#content">Send</a></li>
-                  <li><a href="{% url 'view_notification' %}#content">View</a></li>
+                  <li><a href="{% url 'view_notification_admin' %}#content">View</a></li>
                 </ul>
               </li>
             </ul>

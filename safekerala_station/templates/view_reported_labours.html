@@ -1,5 +1,4 @@
 {% extends 'stn_index.html' %}
-{% load custom_filters %}
 {% block body %}
   <h2 class="text-dark text-center pb-5"> Reported Labors</h2>
 
@@ -10,6 +9,7 @@
         <th>Labour Name</th>
         <th>User Name</th>
         <th>Report</th>
+        <th>Reported Date</th>
         <th>block</th>
       </tr>
     </thead>
@@ -20,6 +20,7 @@
           <td>{{ action.labor.lb_name }}</td>
           <td>{{ action.user.username }}</td>
           <td>{{ action.report_text }}</td>
+          <td>{{ action.r_date }}</td>
           <td>
             <form method="post">
               {% csrf_token %}

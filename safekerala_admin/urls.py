@@ -19,9 +19,12 @@ urlpatterns = [
     path('view_criminal/', views.view_criminal, name="view_criminal"),
     path('view_labour/', views.view_labour, name="view_labour"),
     path('view_complaint/', views.view_complaint, name="view_complaint"),
+    path('reply_to_complaint/<int:complaint_id>/', views.reply_to_complaint, name="reply_to_complaint"),
+    path('send_reply_to_complaint/<int:complaint_id>/', views.send_reply_to_complaint, name="send_reply_to_complaint"),
     path('view_feedback/', views.view_feedback, name="view_feedback"),
     path('send_notification/', views.send_notification, name="send_notification"),
-    path('view_notification/', views.view_notification, name="view_notification"),
+    path('view_notification_admin/', views.view_notification_admin, name="view_notification_admin"),
+    path('Delete_notification/<int:notification_id>', views.Delete_notification, name="Delete_notification"),
 
 
 ]

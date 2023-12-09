@@ -16,12 +16,13 @@
   {% csrf_token %}
   <tr>
     <td>From</td>
-    <td><input type="date" name="textfield" id="textfield" class="form-control" required/></td>
+    <td><input type="date" name="textfield" id="textfield" class="form-control" /></td>
     <td>To</td>
-    <td><input type="date" name="textfield2" id="textfield2" class="form-control" required/></td>
+    <td><input type="date" name="textfield2" id="textfield2" class="form-control" /></td>
     <td><input type="submit" name="textfield3" id="textfield3" value="search" class="btn btn-success  "/></td>
   </tr>
 </table>
+  </form>
   <table class="table table-bordered table-striped">
     <tr>
       <th>Sno</th>
@@ -35,14 +36,23 @@
     <tr>
       <td>{{forloop.counter}}</td>
       <td>{{i.c_date}}</td>
-      <td>&nbsp;{{i.u_name}}</td>
+      <td>&nbsp;{{i.u_loginid.username}}</td>
       <td>&nbsp;{{i.c_complaint}}</td>
       <td>&nbsp;{{i.c_status}}</td>
-      <td>&nbsp;{{i.c_reply}}</td>
+      <td>
+      {% if i.c_reply == None %}
+        <form action="{% url 'reply_to_complaint' complaint_id=i.id %}#content" method="post">
+          {% csrf_token %}
+          <button class="btn btn-primary">Reply</button>
+        </form>
+        {% else %}
+        {{i.c_reply}}
+      {% endif %}
+      </td>
     </tr>
     {% endfor %}
   </table>
-</form>
+
 </body>
 </html>
 {% endblock %}

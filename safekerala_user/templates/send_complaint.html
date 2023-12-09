@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends 'usr_index.html' %}
+{% block content %}
+  <h2 class="text-dark text-center pb-5">Send Complaint</h2>
+  <form method="post">
+    {% csrf_token %}
+    <textarea name="complaint_text" rows="4" cols="50" placeholder="Enter your complaint"></textarea>
+    <br>
+    <button type="submit" class="btn btn-success">Submit Complaint</button>
+  </form>
+{% endblock %}

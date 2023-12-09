@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password, make_password
@@ -6,8 +8,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
-from safekerala_admin.models import StationsDB, CriminalDB, LabourDB, ActionDB, ReportDB
-from safekerala_admin.models import UserDB
+from safekerala_admin.models import StationsDB, CriminalDB, LabourDB, ActionDB, ReportDB, ComplaintDB, NotificationDB, \
+    FeedbackDB, UserDB
 
 
 # Create your views here.
@@ -93,6 +95,7 @@ def user_change_password(request):
     if request.method == 'POST':
         # Get current user's username from session
         username = request.session.get('usr_name')
+        password = request.session.get('password')
 
         # Get form data for old password, new password, and confirm password
         old_password = request.POST.get('old_password')
@@ -103,7 +106,7 @@ def user_change_password(request):
         user = UserDB.objects.get(username=username)
 
         # Verify if the old password matches the one in the database
-        if not check_password(old_password, user.password):
+        if not password == old_password:
             messages.error(request, 'Old password is incorrect.')
             return redirect('user_change_password')
 
@@ -113,7 +116,7 @@ def user_change_password(request):
             return redirect('user_change_password')
 
         # Use set_password to hash and update the user's password
-        user.set_password(new_password)
+        user.password = new_password
         user.save()
 
         # Update the password in the session
@@ -128,13 +131,78 @@ def user_change_password(request):
 
     return render(request, 'change_password_user.html')
 
+
 def report_labor(request, labor_id):
     if request.method == 'POST':
         report_text = request.POST.get('report_text')
         labor = LabourDB.objects.get(id=labor_id)
         username = request.session.get('usr_name')
         data = UserDB.objects.get(username=username)  # Assuming user is authenticated
-        report = ReportDB.objects.create(labor=labor, user=data, report_text=report_text)
+        report = ReportDB.objects.create(labor=labor, user=data, report_text=report_text,r_date=date.today())
         # You might want to redirect to a different page or show a success message
 
     return redirect('labours')  # Redirect to the user's labor list page
+
+def send_complaint(request):
+    if request.method == 'POST':
+        complaint_text = request.POST.get('complaint_text')
+
+        # Assuming you have the user information in the session
+        user_id = request.session.get('user_id')
+
+        # Fetch the UserDB instance using the user_id
+        user_instance = UserDB.objects.get(id=user_id)
+
+        # Get the current date
+        current_date = date.today()
+
+        # Create a ComplaintDB object with the user information, complaint text, and current date
+        ComplaintDB.objects.create(
+            c_date=current_date,
+            c_complaint=complaint_text,
+            u_loginid=user_instance,
+            c_status='Pending'  # Assuming a default status
+        )
+
+        messages.success(request, 'Complaint submitted successfully.')
+        return redirect('send_complaint')
+
+    return render(request, 'send_complaint.html')
+
+def view_response(request):
+    # Assuming you have the user information in the session
+    user_id = request.session.get('user_id')
+
+    # Get complaints for the logged-in user
+    complaints = ComplaintDB.objects.filter(u_loginid=user_id)
+
+    return render(request, 'view_response.html', {'complaints': complaints})
+
+
+def view_notification_usr(req):
+    data = NotificationDB.objects.all().order_by('-n_date')
+    return render(req, "view_notification_usr.html", {'data': data})
+
+
+def send_feedback(request):
+    if request.method == 'POST':
+        feedback_text = request.POST.get('feedback_text')
+
+        # Assuming you have the user information in the session
+        user_id = request.session.get('user_id')
+
+        # Fetch the UserDB instance using the user_id
+        user_instance = UserDB.objects.get(id=user_id)
+
+        # Create a FeedbackDB object with the user information, feedback text, and current date
+        FeedbackDB.objects.create(
+            f_date=date.today(),
+            f_feedback=feedback_text,
+            u_loginid=user_instance,
+        )
+
+        messages.success(request, 'Feedback submitted successfully.')
+        return redirect('send_feedback')
+
+    return render(request, 'send_feedback.html')
+

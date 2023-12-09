@@ -84,7 +84,7 @@ class BlockedLabourDB(models.Model):
 class ComplaintDB(models.Model):
     c_date = models.DateField(null=True, blank=True)
     c_complaint = models.CharField(max_length=200, blank=True, null=True)
-    u_loginid = models.IntegerField(null=True, blank=True)
+    u_loginid = models.ForeignKey(UserDB, on_delete=models.CASCADE, null=True)
     c_reply = models.CharField(max_length=200, blank=True, null=True)
     c_status = models.CharField(max_length=10, blank=True, null=True)
 
@@ -92,7 +92,7 @@ class ComplaintDB(models.Model):
 class FeedbackDB(models.Model):
     f_date = models.DateField(null=True, blank=True)
     f_feedback = models.CharField(max_length=200, blank=True, null=True)
-    u_loginid = models.IntegerField(null=True, blank=True)
+    u_loginid = models.ForeignKey('UserDB', on_delete=models.CASCADE, null=True)
 
 
 class NotificationDB(models.Model):
@@ -110,4 +110,5 @@ class ActionDB(models.Model):
 class ReportDB(models.Model):
     labor = models.ForeignKey(LabourDB, on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(UserDB, on_delete=models.CASCADE)
+    r_date = models.DateField(null=True, blank=True)
     report_text = models.TextField()

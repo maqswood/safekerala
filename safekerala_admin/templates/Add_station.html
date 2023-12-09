@@ -8,6 +8,8 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places" defer></script>
+    <script src="{% static 'js/map_script.js' %}" defer></script>
 </head><body>
 
 <h1 class="text-dark text-center pb-5">Add Police Station</h1>
@@ -56,6 +58,10 @@
   </tr>
     <tr>
     <td>Password</td>
+    <td><input type="text" name="textfield12" id="textfield12" class="form-control" required/></td>
+  </tr>
+    <tr>
+    <td>location</td>
     <td><input type="text" name="textfield12" id="textfield12" class="form-control" required/></td>
   </tr>
   <tr>

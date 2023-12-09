@@ -1,4 +1,7 @@
+from datetime import datetime
+
 from django.contrib import messages
+from django.contrib.auth import authenticate, login
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
@@ -262,6 +265,27 @@ def station_viewcomplaint_sendreplay(req):
     return render(req, "view complaint and send reply.html", {'data': data})
 
 
+def reply_to_complaint_stn(req, complaint_id):
+    complaint_id = complaint_id
+    return render(req, "send_reply_to_complaint_stn.html", {'complaint_id': complaint_id})
+
+
+def send_reply_to_complaint_stn(request, complaint_id):
+    if request.method == 'POST':
+        reply_text = request.POST.get('reply_text')
+
+        # Get the complaint instance
+        complaint = ComplaintDB.objects.get(id=complaint_id)
+
+        # Save the reply to the complaint
+        complaint.c_reply = reply_text
+        complaint.c_status = 'Replied'
+        complaint.save()
+
+        messages.success(request, 'Reply sent successfully.')
+        return redirect(station_viewcomplaint_sendreplay)
+
+
 def station_view_feedback(req):
     data = FeedbackDB.objects.all()
     return render(req, "view feedback.html", {'data': data})
@@ -276,3 +300,70 @@ def station_view_profile(req):
     username = req.session.get('usr_name')
     data = StationsDB.objects.get(username=username)
     return render(req, "view profile.html", {'data': data})
+
+
+def station_edit_profile(req):
+    username = req.session.get('usr_name')
+    data = StationsDB.objects.get(username=username)
+    return render(req, "edit_station_profile.html", {'data': data})
+
+
+def save_station_edit_profile(req):
+    station_id = req.session.get('station_id')
+    if req.method == "POST":
+        name = req.POST.get('textfield')
+        email = req.POST.get('textfield2')
+        phone = req.POST.get('textfield3')
+        post = req.POST.get('textfield4')
+        district = req.POST.get('textfield5')
+        place = req.POST.get('textfield6')
+        pin = req.POST.get('textfield7')
+        latitude = req.POST.get('textfield8')
+        longitude = req.POST.get('textfield9')
+
+        StationsDB.objects.filter(id=station_id).update(StationName=name, Email=email, Phone=phone, Post=post,
+                                                        District=district, Place=place,
+                                                        Pin=pin, Latitude=latitude, Longitude=longitude)
+
+        return redirect(station_view_profile)
+
+
+def station_change_password(request):
+    if request.method == 'POST':
+        # Get current station's username from session
+        username = request.session.get('usr_name')
+        password = request.session.get('password')
+
+        # Get form data for old password, new password, and confirm password
+        old_password = request.POST.get('old_password')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        # Retrieve the user from the database
+        user = StationsDB.objects.get(username=username)
+
+        # Verify if the old password matches the one in the database
+        if not password == old_password:
+            messages.error(request, 'Old password is incorrect.')
+            return redirect('station_change_password')
+
+        # Check if the new password and confirm password match
+        if new_password != confirm_password:
+            messages.error(request, 'New password and confirm password do not match.')
+            return redirect('station_change_password')
+
+        # Use set_password to hash and update the user's password
+        user.password = new_password
+        user.save()
+
+        # Update the password in the session
+        request.session['password'] = user.password
+
+        # Log the user in with the new password
+        updated_user = authenticate(request, username=username, password=new_password)
+        login(request, updated_user)
+
+        messages.success(request, 'Password changed successfully.')
+        return redirect('station_view_profile')
+
+    return render(request, 'change_password_station.html')
