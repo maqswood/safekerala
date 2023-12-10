@@ -1,0 +1,19 @@
+<!-- templates/send_reply_to_complaint.html -->
+
+{% extends 'stn_index.html' %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h2 class="text-dark text-center pb-4">Send Reply to Complaint</h2>
+
+    <form method="post" action="{% url 'send_reply_to_complaint_stn' complaint_id=complaint_id %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="reply_text">Reply Text:</label>
+        <textarea class="form-control" id="reply_text" name="reply_text" rows="4" required></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Send Reply</button>
+    </form>
+  </div>
+{% endblock %}

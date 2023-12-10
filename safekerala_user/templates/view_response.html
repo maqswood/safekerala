@@ -1,0 +1,29 @@
+{% extends 'usr_index.html' %}
+{% block content %}
+  <h2 class="text-dark text-center pb-5">View Response</h2>
+
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>S.No</th>
+        <th>Complaint</th>
+        <th>Reply</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for complaint in complaints %}
+        <tr>
+          <td>{{forloop.counter}}</td>
+          <td>{{ complaint.c_complaint }}</td>
+          <td>
+            {% if complaint.c_reply == None %}
+              <p>Pending</p>
+            {% else %}
+            {{ complaint.c_reply }}
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

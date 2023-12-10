@@ -1,0 +1,13 @@
+{% extends 'usr_index.html' %}
+{% block content %}
+  <h2 class="text-dark text-center pb-5">Notifications</h2>
+
+  <ul class="list-group">
+    {% for notification in data %}
+      <li class="list-group-item">
+        -<b>{{ notification.n_content }}</b>
+        <span class="float-right"><i>&nbsp;&nbsp;&nbsp;{{ notification.n_date }}</i></span>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
