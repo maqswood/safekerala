@@ -8,22 +8,44 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
+
+  <!-- Add your JavaScript code here -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Get the form element
+      var form = document.querySelector('form');
+
+      // Add a submit event listener to the form
+      form.addEventListener('submit', function (event) {
+        // Prevent the default form submission
+        event.preventDefault();
+
+        // Add your custom logic here
+        var replyTextArea = document.getElementById('textarea');
+        alert('Reply submitted: ' + replyTextArea.value); // Example: Display an alert with the reply text
+      });
+    });
+  </script>
+  <!-- End of JavaScript code -->
+
 </head>
 <body>
 <h1 class="text-dark text-center pb-5">Send Reply</h1>
 
-<form action="/admin_send_reply_post" method="post"><table class="table table-bordered table-striped">
-  <tr>
-    <td>Reply</td>
-    <input type="hidden" name="id" value="{{data}}">
-    <td><textarea name="textarea" id="textarea" cols="45" rows="5" class="form-control" required></textarea></td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td><input type="submit" name="textfield" id="textfield" class="btn btn-success  "/></td>
-  </tr>
-</table>
+<form action="/admin_send_reply_post" method="post">
+  <table class="table table-bordered table-striped">
+    <tr>
+      <td>Reply</td>
+      <input type="hidden" name="id" value="{{data}}">
+      <td><textarea name="textarea" id="textarea" cols="45" rows="5" class="form-control" required></textarea></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><input type="submit" name="textfield" id="textfield" class="btn btn-success  "/></td>
+    </tr>
+  </table>
 </form>
 </body>
 </html>
+
 {% endblock %}

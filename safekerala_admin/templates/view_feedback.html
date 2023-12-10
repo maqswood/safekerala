@@ -1,35 +1,50 @@
 {% extends 'ad_index.html' %}
 {% block content %}
+  <body>
+    <h1 class="text-dark text-center pb-5">Feedback</h1>
 
-<body>
-<h1 class="text-dark text-center pb-5">Feedback</h1>
+    <form id="feedbackForm" action="" method="post">
+      <table class="table table-bordered table-striped">
+        {% csrf_token %}
+        <tr>
+          <td>From</td>
+          <td><input type="date" name="textfield" id="fromDate" class="form-control" required/></td>
+          <td>To</td>
+          <td><input type="date" name="textfield2" id="toDate" class="form-control" required/></td>
+          <td><input type="submit" name="textfield3" id="submitButton" class="btn btn-success"/></td>
+        </tr>
+      </table>
 
-<form action="" method="post"><table class="table table-bordered table-striped">
-  {% csrf_token %}
-  <tr>
-    <td>From</td>
-    <td><input type="date" name="textfield" id="textfield" class="form-control" required/></td>
-    <td>To</td>
-    <td><input type="date" name="textfield2" id="textfield2" class="form-control" required/></td>
-    <td><input type="submit" name="textfield3" id="textfield3" class="btn btn-success  "/></td>
-  </tr>
-</table>
-  <table class="table table-bordered table-striped">
-    <tr>
-      <td>Sno</td>
-      <td>Date</td>
-      <td>User Info</td>
-      <td>Feedback</td>
-    </tr>
-    {% for i in data %}
-    <tr>
-      <td>{{forloop.counter}}</td>
-      <td>{{i.f_date}}</td>
-      <td>{{i.u_loginid.username}}</td>
-      <td>{{i.f_feedback}}</td>
-    </tr>
-    {% endfor%}
-  </table>
-</form>
-</body>
-{% endblock %}}
+      <table class="table table-bordered table-striped">
+        <tr>
+          <td>Sno</td>
+          <td>Date</td>
+          <td>User Info</td>
+          <td>Feedback</td>
+        </tr>
+        {% for i in data %}
+          <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{i.f_date}}</td>
+            <td>{{i.u_loginid.username}}</td>
+            <td>{{i.f_feedback}}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    </form>
+
+    <!-- Add JavaScript for date range validation -->
+    <script>
+      document.getElementById('feedbackForm').addEventListener('submit', function (event) {
+        var fromDate = new Date(document.getElementById('fromDate').value);
+        var toDate = new Date(document.getElementById('toDate').value);
+
+        // Check if fromDate is after toDate
+        if (fromDate > toDate) {
+          alert('From date should be before or equal to To date');
+          event.preventDefault(); // Prevent form submission
+        }
+      });
+    </script>
+  </body>
+{% endblock %}

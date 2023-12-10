@@ -10,8 +10,8 @@ class StationsDB(models.Model):
     District = models.CharField(max_length=20, null=True, blank=True)
     Place = models.CharField(max_length=20, null=True, blank=True)
     Pin = models.IntegerField(null=True, blank=True)
-    Latitude = models.IntegerField(null=True, blank=True)
-    Longitude = models.IntegerField(null=True, blank=True)
+    Latitude = models.FloatField(null=True, blank=True)
+    Longitude = models.FloatField(null=True, blank=True)
     username = models.CharField(max_length=50, null=True, blank=True)
     password = models.CharField(max_length=8, blank=True, null=True)
 

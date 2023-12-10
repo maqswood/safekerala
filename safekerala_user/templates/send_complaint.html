@@ -3,7 +3,7 @@
   <h2 class="text-dark text-center pb-5">Send Complaint</h2>
   <form method="post">
     {% csrf_token %}
-    <textarea name="complaint_text" rows="4" cols="50" placeholder="Enter your complaint"></textarea>
+    <textarea name="complaint_text" rows="5" cols="140" placeholder="Enter your complaint"></textarea>
     <br>
     <button type="submit" class="btn btn-success">Submit Complaint</button>
   </form>

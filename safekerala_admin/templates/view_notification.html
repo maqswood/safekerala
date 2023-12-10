@@ -1,37 +1,54 @@
 {% extends 'ad_index.html' %}
 {% block content %}
-<body>
-<h1 class="text-dark text-center pb-5">Notifications</h1>
+  <body>
+    <h1 class="text-dark text-center pb-5">Notifications</h1>
 
-<form id="form1" name="form1" method="post" action="">
-  {% csrf_token %}
-  <table class="table table-bordered table-striped">
-    <tr>
-    <td>From</td>
-    <td><input type="date" name="textfield" id="textfield" class="form-control" required/></td>
-    <td>To</td>
-    <td><input type="date" name="textfield2" id="textfield2" class="form-control" required/></td>
-    <td><input type="submit" name="textfield3" id="textfield3" value="Search" class="btn btn-success  " /></td>
-  </tr>
-</table>
-</form>
-  <table class="table table-bordered table-striped">
-    <tr>
-      <th>S.No</th>
-      <th>Date</th>
-      <th>Notification</th>
-      <th>&nbsp;</th>
-    </tr>
-    {% for i in data %}
-    <tr>
-      <td>{{forloop.counter}}</td>
-      <td>{{i.n_date}}</td>
-      <td>{{i.n_content}}</td>
-      <td><form action="{% url 'Delete_notification'  notification_id=i.id %}#content" style="display: inline-block;">
-          <button type="submit" class="btn btn-danger">Delete</button>
-        </form></td>
-    </tr>
-    {% endfor %}
-  </table>
-</body>
-{% endblock %}}
+    <form id="notificationForm" method="post" action="">
+      {% csrf_token %}
+      <table class="table table-bordered table-striped">
+        <tr>
+          <td>From</td>
+          <td><input type="date" name="textfield" id="textfield" class="form-control" required/></td>
+          <td>To</td>
+          <td><input type="date" name="textfield2" id="textfield2" class="form-control" required/></td>
+          <td><input type="submit" name="textfield3" id="searchButton" value="Search" class="btn btn-success"/></td>
+        </tr>
+      </table>
+    </form>
+
+    <table class="table table-bordered table-striped">
+      <tr>
+        <th>S.No</th>
+        <th>Date</th>
+        <th>Notification</th>
+        <th>&nbsp;</th>
+      </tr>
+      {% for i in data %}
+        <tr>
+          <td>{{forloop.counter}}</td>
+          <td>{{i.n_date}}</td>
+          <td>{{i.n_content}}</td>
+          <td>
+            <form action="{% url 'Delete_notification' notification_id=i.id %}#content" style="display: inline-block;">
+              <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+
+    <!-- Add JavaScript for form validation -->
+    <script>
+      document.getElementById('notificationForm').addEventListener('submit', function (event) {
+        var fromDate = document.getElementById('textfield').value;
+        var toDate = document.getElementById('textfield2').value;
+
+        // Check if the 'From' date is not greater than the 'To' date
+        if (new Date(fromDate) > new Date(toDate)) {
+          alert('Invalid date range. Please check your dates.');
+          event.preventDefault(); // Prevent form submission
+        }
+      });
+    </script>
+  </body>
+{% endblock %}

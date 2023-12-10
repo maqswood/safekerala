@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 # Your app/module imports
@@ -37,7 +38,6 @@ def save_usr_registration(req):
         obj_save_usr_registration.save()
         return redirect(LoginAdmin)
 
-
 def Login_admin_auth(req):
     if req.method == "POST":
         usr_name = req.POST.get('user_name')
@@ -55,17 +55,16 @@ def Login_admin_auth(req):
             req.session['station_id'] = station.id
             req.session['usr_name'] = usr_name
             req.session['password'] = usr_password
-
             return redirect(stn_index)
         elif UserDB.objects.filter(username=usr_name, password=usr_password).exists():
             user = UserDB.objects.get(username=usr_name, password=usr_password)
             req.session['user_id'] = user.id
             req.session['usr_name'] = usr_name
             req.session['password'] = usr_password
-
             return redirect(usr_index)
-        else:
-            return redirect(LoginAdmin)
+
+    # If none of the conditions are met, return a response indicating unsuccessful login
+    return HttpResponse("Login unsuccessful. Please check your credentials.")
 
 
 def LogoutAdmin(req):
@@ -110,12 +109,14 @@ def save_station_data(request):
         district = request.POST.get('textfield5')
         place = request.POST.get('textfield6')
         pin = request.POST.get('textfield7')
-        latitude = request.POST.get('textfield8')
-        longitude = request.POST.get('textfield9')
+        coordinates = request.POST.get('coordinates')
+        # latitude = request.POST.get('textfield8')
+        # longitude = request.POST.get('textfield9')
         username = request.POST.get('textfield11')
         password = request.POST.get('textfield12')
         save_data = StationsDB(StationName=name, Email=email, Phone=phone, Post=post, District=district, Place=place,
-                               Pin=pin, Latitude=latitude, Longitude=longitude, username=username, password=password)
+                               Pin=pin, Latitude=coordinates.split(',')[0], Longitude=coordinates.split(',')[1],
+                               username=username, password=password)
         save_data.save()
         return redirect(AddStation)
 
@@ -142,11 +143,12 @@ def update_station_data(request, data_id):
         district = request.POST.get('textfield5')
         place = request.POST.get('textfield6')
         pin = request.POST.get('textfield7')
-        latitude = request.POST.get('textfield8')
-        longitude = request.POST.get('textfield9')
+        coordinates = request.POST.get('coordinates')
+        # latitude = request.POST.get('textfield8')
+        # longitude = request.POST.get('textfield9')
         StationsDB.objects.filter(id=data_id).update(StationName=name, Email=email, Phone=phone, Post=post,
-                                                     District=district, Place=place, Pin=pin, Latitude=latitude,
-                                                     Longitude=longitude)
+                                                     District=district, Place=place, Pin=pin,
+                                                     Latitude=coordinates.split(',')[0], Longitude=coordinates.split(',')[1], )
         return redirect(view_stations)
 
 

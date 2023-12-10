@@ -5,6 +5,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Edit_stations</title>
+
+    <!-- Add your JavaScript file or code here -->
+    <script>
+        // Example JavaScript code
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM is ready, you can now add your JavaScript code
+
+            // Example: Add an event listener to the 'textfield' input
+            var textField = document.getElementById('textfield');
+            textField.addEventListener('input', function() {
+                // Do something when the input changes
+            });
+
+            // Add more JavaScript code as needed
+
+        });
+    </script>
+
 </head>
 <body>
 <form method="post" action="{% url 'update_station_data' data_id=data.id %}">

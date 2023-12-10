@@ -31,8 +31,8 @@
     <td>{{i.lb_name}}</td>
     <td>{{i.lb_phone}}<br>{{i.lb_email}}</td>
     <td>{{i.lb_place}}<br>{{i.lb_post}}<br>{{i.lb_pincode}}<br>{{i.lb_district}}</td>
-    <td><img src="{{i.lb_photo1.url}}" height="50px"/></td>
-      <td><img src="{{i.lb_photo2.url}}" height="50px"/></td>
+    <td><img src="{{i.lb_photo1.url}}" height="100px"/></td>
+      <td><img src="{{i.lb_photo2.url}}" height="100px"/></td>
     <td>
       <form action="{% url 'report_labor' labor_id=i.id %}#content" method="post">
         {% csrf_token %}

@@ -1,4 +1,5 @@
-<!doctype html>
+<!-- templates/complaints.html -->
+
 {% extends 'ad_index.html' %}
 {% block content %}
 <html lang="en">
@@ -12,46 +13,67 @@
 <body>
 <h1 class="text-dark text-center pb-5">Complaints</h1>
 
-<form action="" method="post"><table class="table table-bordered table-striped">
+<!-- Add a script to validate date inputs -->
+<script>
+  function validateDateInputs() {
+    var fromDate = document.getElementById('textfield').value;
+    var toDate = document.getElementById('textfield2').value;
+
+    // Perform validation based on your requirements
+    if (fromDate.trim() === '' || toDate.trim() === '') {
+      alert('Please select both "From" and "To" dates.');
+      return false; // Prevent form submission
+    }
+
+    // Additional validation logic can be added here
+
+    // If all validation passes, allow form submission
+    return true;
+  }
+</script>
+
+<form action="" method="post" onsubmit="return validateDateInputs()">
   {% csrf_token %}
-  <tr>
-    <td>From</td>
-    <td><input type="date" name="textfield" id="textfield" class="form-control" /></td>
-    <td>To</td>
-    <td><input type="date" name="textfield2" id="textfield2" class="form-control" /></td>
-    <td><input type="submit" name="textfield3" id="textfield3" value="search" class="btn btn-success  "/></td>
-  </tr>
-</table>
-  </form>
   <table class="table table-bordered table-striped">
     <tr>
-      <th>Sno</th>
-      <th>Date</th>
-      <th>User Info</th>
-      <th>Complaint</th>
-      <th>Status</th>
-      <th>Reply</th>
+      <td>From</td>
+      <td><input type="date" name="textfield" id="textfield" class="form-control" /></td>
+      <td>To</td>
+      <td><input type="date" name="textfield2" id="textfield2" class="form-control" /></td>
+      <td><input type="submit" name="textfield3" id="textfield3" value="search" class="btn btn-success  "/></td>
     </tr>
-    {% for i in data %}
-    <tr>
-      <td>{{forloop.counter}}</td>
-      <td>{{i.c_date}}</td>
-      <td>&nbsp;{{i.u_loginid.username}}</td>
-      <td>&nbsp;{{i.c_complaint}}</td>
-      <td>&nbsp;{{i.c_status}}</td>
-      <td>
-      {% if i.c_reply == None %}
-        <form action="{% url 'reply_to_complaint' complaint_id=i.id %}#content" method="post">
-          {% csrf_token %}
-          <button class="btn btn-primary">Reply</button>
-        </form>
-        {% else %}
-        {{i.c_reply}}
-      {% endif %}
-      </td>
-    </tr>
-    {% endfor %}
   </table>
+</form>
+
+<table class="table table-bordered table-striped">
+  <tr>
+    <th>Sno</th>
+    <th>Date</th>
+    <th>User Info</th>
+    <th>Complaint</th>
+    <th>Status</th>
+    <th>Reply</th>
+  </tr>
+  {% for i in data %}
+  <tr>
+    <td>{{forloop.counter}}</td>
+    <td>{{i.c_date}}</td>
+    <td>&nbsp;{{i.u_loginid.username}}</td>
+    <td>&nbsp;{{i.c_complaint}}</td>
+    <td>&nbsp;{{i.c_status}}</td>
+    <td>
+    {% if i.c_reply == None %}
+      <form action="{% url 'reply_to_complaint' complaint_id=i.id %}#content" method="post">
+        {% csrf_token %}
+        <button class="btn btn-primary">Reply</button>
+      </form>
+    {% else %}
+      {{i.c_reply}}
+    {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
 
 </body>
 </html>

@@ -4,56 +4,144 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>view_stations</title>
+    <title>View Stations</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
 <div style="text-align:center;">
     <h1>Station Details</h1>
-    <table class="table table-bordered table-striped">
-        <form action="" method="post">
-          {% csrf_token %}
-          <tr>
-            <td><input type="text" name="textfield" id="textfield" class="form-control" placeholder="search by station name" required/></td>
-            <td><input type="submit" name="textfield2" id="textfield2" value="search" class="btn btn-success  "/></td>
-          </tr>
-        </form>
-    </table>
-<table class="table table-bordered table-striped" width="100%">
-    <tr>
-      <th>Sno</th>
-      <th>Name</th>
-      <th>phone</th>
-      <th>E-mail</th>
-      <th>place</th>
-      <th>post</th>
-      <th>pin</th>
-      <th>district</th>
-        <th>Latitude</th>
-        <th>Longitude</th>
-        <th>Edit</th>
-    </tr>
+    <form action="" method="post">
+        {% csrf_token %}
+        <table class="table table-bordered table-striped">
+            <tr>
+                <td><input type="text" name="textfield" id="textfield" class="form-control" placeholder="search by station name" required/></td>
+                <td><input type="submit" name="textfield2" id="textfield2" value="search" class="btn btn-success"/></td>
+            </tr>
+        </table>
+    </form>
+    <div id="map"></div>
+    <table class="table table-bordered table-striped" width="100%">
+        <tr>
+            <th>Sno</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>E-mail</th>
+            <th>Place</th>
+            <th>Post</th>
+            <th>Pin</th>
+            <th>District</th>
+            <th>Edit</th>
+            <th>Map</th>
+            <th>Directions</th>
+        </tr>
 
-    {% for i in data %}
-    <tr>
-        <td>{{ forloop.counter }}</td>
-        <td>{{i.StationName}}</td>
-        <td>{{i.Phone}}</td>
-        <td>{{i.Email}}</td>
-        <td>{{i.Place}}</td>
-        <td>{{i.Post}}</td>
-        <td>{{i.Pin}}</td>
-        <td>{{i.District}}</td>
-        <td>{{i.Latitude}}</td>
-        <td>{{i.Longitude}}</td>
-        <td>
-            <form action="{% url 'Edit_stations' data_id=i.id %}#content" >
-                <button class="btn btn-danger">Edit</button>
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
-  </table>
-    </div>
+        {% for i in data %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{i.StationName}}</td>
+            <td>{{i.Phone}}</td>
+            <td>{{i.Email}}</td>
+            <td>{{i.Place}}</td>
+            <td>{{i.Post}}</td>
+            <td>{{i.Pin}}</td>
+            <td>{{i.District}}</td>
+            <td>
+                <form action="{% url 'Edit_stations' data_id=i.id %}#content">
+                    <button class="btn btn-danger">Edit</button>
+                </form>
+            </td>
+            <td>
+                <button onclick="showMap('{{ i.Latitude }}', '{{ i.Longitude }}')" class="btn btn-primary">Show Map</button>
+            </td>
+            <td>
+                <button onclick="getDirections('{{ i.Latitude }}', '{{ i.Longitude }}')" class="btn btn-success">Get Directions</button>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+</div>
+
+<script>
+    var map;
+    var userLocation;
+
+    function initMap() {
+        map = L.map('map').setView([0, 0], 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+    }
+
+    function showMap(latitude, longitude) {
+        map.setView([latitude, longitude], 15);
+        L.marker([latitude, longitude]).addTo(map);
+    }
+
+    function getDirections(stationLatitude, stationLongitude) {
+        if (userLocation) {
+            // Show loading indicator
+            var control = L.Routing.control({
+                waypoints: [
+                    L.latLng(userLocation.latitude, userLocation.longitude),
+                    L.latLng(stationLatitude, stationLongitude)
+                ],
+                routeWhileDragging: true
+            }).addTo(map);
+
+            // Add event listener for when the route is loaded
+            control.on('routesfound', function (event) {
+                // Hide loading indicator
+                alert('Directions loaded successfully!');
+            });
+
+            // Add event listener for errors
+            control.on('routingerror', function (event) {
+                // Hide loading indicator
+                alert('Error getting directions: ' + event.error.message);
+            });
+        } else {
+            alert('User location not available. Please allow location access.');
+        }
+    }
+
+    // Get user's current location
+    function getUserLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    userLocation = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    };
+                },
+                function (error) {
+                    alert('Error getting location: ' + error.message);
+                }
+            );
+        } else {
+            alert('Geolocation is not supported by this browser.');
+        }
+    }
+
+    // Initialize map when the document is ready
+    document.addEventListener('DOMContentLoaded', function () {
+        initMap();
+        getUserLocation();
+    });
+</script>
+
 </body>
 </html>
 {% endblock %}
