@@ -79,6 +79,7 @@ def save_user_edit_profile(req):
                                                  phone=user_phone, place=user_place, post=user_post,
                                                  district=user_district,
                                                  pin=user_pincode, photo=file)
+        messages.success(req, 'Updated Successfully!')
         return redirect(user_view_profile)
 
 
@@ -88,6 +89,7 @@ def delete_usr_account(req):
     del req.session['usr_name']
     del req.session['password']
     user_for_delete.delete()
+    messages.success(req, 'Deleted Successfully!')
     return redirect('LoginAdmin')
 
 
@@ -140,7 +142,7 @@ def report_labor(request, labor_id):
         data = UserDB.objects.get(username=username)  # Assuming user is authenticated
         report = ReportDB.objects.create(labor=labor, user=data, report_text=report_text,r_date=date.today())
         # You might want to redirect to a different page or show a success message
-
+        messages.success(request, 'successfully Reported!')
     return redirect('labours')  # Redirect to the user's labor list page
 
 def send_complaint(request):

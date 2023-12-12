@@ -37,18 +37,43 @@
       <td><img src="{{i.lb_photo1.url}}" height="100px"/></td>
       <td><img src="{{i.lb_photo2.url}}" height="100px"/></td>
       <td>
-        <form action="{% url 'edit_labour'  labour_id=i.id %}#content" style="display: inline-block;">
+        <form action="{% url 'edit_labour'  labour_id=i.id %}#main" style="display: inline-block;">
           <button type="submit" class="btn btn-success">Edit</button>
         </form>
       </td>
       <td>
-        <form action="{% url 'DeleteLabour'  labour_id=i.id %}#content" style="display: inline-block;">
+        <form action="{% url 'DeleteLabour'  labour_id=i.id %}#main" style="display: inline-block;">
           <button type="submit" class="btn btn-danger">Delete</button>
         </form>
       </td>
     </tr>
     {% endfor %}
 </table>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% if messages %}
+    {% for i in messages %}
+        {% if i.tags == 'warning' %}
+            <script>
+                swal('{{i}}','','warning')
+            </script>
+        {% elif  i.tags == 'error' %}
+            <script>
+                swal('{{i}}','','error')
+            </script>
+        {% elif i.tags == 'success' %}
+            <script>
+                swal('{{i}}','','success')
+            </script>
+        {% else %}
+            <script>
+                swal('{{i}}','','info')
+            </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
 
 
 </body>

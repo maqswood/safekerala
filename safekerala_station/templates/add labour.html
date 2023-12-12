@@ -69,5 +69,31 @@
     <td><input type="submit" name="button" id="button" value="Submit"class="btn btn-success  " /></td>
 </table>
 </form>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% if messages %}
+    {% for i in messages %}
+        {% if i.tags == 'warning' %}
+            <script>
+                swal('{{i}}','','warning')
+            </script>
+        {% elif  i.tags == 'error' %}
+            <script>
+                swal('{{i}}','','error')
+            </script>
+        {% elif i.tags == 'success' %}
+            <script>
+                swal('{{i}}','','success')
+            </script>
+        {% else %}
+            <script>
+                swal('{{i}}','','info')
+            </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
 </body>
 {% endblock %}

@@ -2,37 +2,16 @@
 {% load static %}
 <html>
 <head>
-<title>SignIn|SignUp</title>
+    <title>SignIn|SignUp</title>
 
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="keywords" content="Slide Login Form template Responsive, Login form web template, Flat Pricing tables, Flat Drop downs Sign up Web Templates, Flat Web Templates, Login sign up Responsive web template, SmartPhone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
-
-    <script>
-        addEventListener("load", function () {
-            setTimeout(hideURLbar, 0);
-        }, false);
-
-        function hideURLbar() {
-            window.scrollTo(0, 1);
-        }
-        
-        // Your additional JavaScript code can be added here
-        
-        // Example: Add an event listener to the 'user_name' input
-        document.addEventListener('DOMContentLoaded', function() {
-            var userNameInput = document.querySelector('input[name="user_name"]');
-            
-            userNameInput.addEventListener('input', function() {
-                // Do something when the input changes
-            });
-        });
-    </script>
-
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords"
+          content="Slide Login Form template Responsive, Login form web template, Flat Pricing tables, Flat Drop downs Sign up Web Templates, Flat Web Templates, Login sign up Responsive web template, SmartPhone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design"/>
     <!-- Custom Theme files -->
-    <link href="{% static 'style2/style.css' %}" rel="stylesheet" type="text/css" media="all" />
-    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" media="all" />
-    <link href="{% static 'style2/font-awesome.min.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="{% static 'style2/style.css' %}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{% static 'style2/font-awesome.min.css" rel="stylesheet" type="text/css" media="all"/>
     <!-- //Custom Theme files -->
 
     <!-- web font -->
@@ -51,7 +30,7 @@
                 <span class="fa fa-eercast"></span>
             </div>
             <div class="header-left-bottom">
-                <form action="{% url 'Login_admin_auth' %}" method="post">
+                <form action="{% url 'Login_admin_auth' %}" method="post" name="login_form" onsubmit="return login_validation()">
                     {% csrf_token %}
                     <div class="icon1 usr">
                         <span class="fa fa-user"></span>
@@ -65,7 +44,8 @@
                         <button class="btn" type="submit">Log In</button>
                     </div>
                     <div class="links">
-                        <p class="right"><a href="{% url 'usr_registration' %}" style="margin:-60px;">New User? Register</a></p>
+                        <p class="right"><a href="{% url 'usr_registration' %}" style="margin:-60px;">New User?
+                            Register</a></p>
                         <div class="clear"></div>
                     </div>
                 </form>
@@ -81,5 +61,29 @@
 </div>
 <!-- //main -->
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% if messages %}
+    {% for i in messages %}
+        {% if i.tags == 'warning' %}
+            <script>
+                swal('{{i}}','','warning')
+            </script>
+        {% elif  i.tags == 'error' %}
+            <script>
+                swal('{{i}}','','error')
+            </script>
+        {% elif i.tags == 'success' %}
+            <script>
+                swal('{{i}}','','success')
+            </script>
+        {% else %}
+            <script>
+                swal('{{i}}','','info')
+            </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
 </body>
 </html>

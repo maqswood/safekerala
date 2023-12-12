@@ -3,8 +3,8 @@ from datetime import datetime, date
 
 # Third-party imports
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, update_session_auth_hash
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -12,7 +12,7 @@ from django.shortcuts import render, redirect
 # Your app/module imports
 from safekerala_admin.models import StationsDB, CriminalDB, LabourDB, ComplaintDB, FeedbackDB, NotificationDB, UserDB
 from safekerala_station.views import stn_index
-from safekerala_user.views import usr_registration, usr_index
+from safekerala_user.views import usr_index
 
 
 # Create your views here.
@@ -36,7 +36,9 @@ def save_usr_registration(req):
                                            phone=user_phone, place=user_place, post=user_post, district=user_district,
                                            pin=user_pincode, photo=user_image)
         obj_save_usr_registration.save()
+        messages.success(req, 'User registration successful. Please log in.')
         return redirect(LoginAdmin)
+
 
 def Login_admin_auth(req):
     if req.method == "POST":
@@ -49,27 +51,31 @@ def Login_admin_auth(req):
                 login(req, user)
                 req.session['username'] = usr_name
                 req.session['password'] = usr_password
+                messages.success(req, 'Login successful. Welcome!')
                 return redirect(AdminIndex)
         elif StationsDB.objects.filter(username=usr_name, password=usr_password).exists():
             station = StationsDB.objects.get(username=usr_name, password=usr_password)
             req.session['station_id'] = station.id
             req.session['usr_name'] = usr_name
             req.session['password'] = usr_password
+            messages.success(req, 'Station login successful. Welcome!')
             return redirect(stn_index)
         elif UserDB.objects.filter(username=usr_name, password=usr_password).exists():
             user = UserDB.objects.get(username=usr_name, password=usr_password)
             req.session['user_id'] = user.id
             req.session['usr_name'] = usr_name
             req.session['password'] = usr_password
+            messages.success(req, 'User login successful. Welcome!')
             return redirect(usr_index)
-
-    # If none of the conditions are met, return a response indicating unsuccessful login
-    return HttpResponse("Login unsuccessful. Please check your credentials.")
+        else:
+            messages.error(req, 'Login unsuccessful. Please check your credentials.')
+            return redirect(LoginAdmin)
 
 
 def LogoutAdmin(req):
     del req.session['username']
     del req.session['password']
+    messages.success(req, 'Logout successful. Goodbye!')
     return redirect(LoginAdmin)
 
 
@@ -78,6 +84,7 @@ def LogoutUser(req):
         del req.session['username']
     if 'password' in req.session:
         del req.session['password']
+    messages.success(req, 'Logout successful. Goodbye!')
     return redirect(LoginAdmin)
 
 
@@ -88,7 +95,7 @@ def LogoutStation(req):
         del req.session['password']
     if 'station_id' in req.session:
         del req.session['station_id']
-
+    messages.success(req, 'Logout successful. Goodbye!')
     return redirect(LoginAdmin)
 
 
@@ -118,6 +125,7 @@ def save_station_data(request):
                                Pin=pin, Latitude=coordinates.split(',')[0], Longitude=coordinates.split(',')[1],
                                username=username, password=password)
         save_data.save()
+        messages.success(request, 'Saved successfully...!')
         return redirect(AddStation)
 
 
@@ -148,7 +156,9 @@ def update_station_data(request, data_id):
         # longitude = request.POST.get('textfield9')
         StationsDB.objects.filter(id=data_id).update(StationName=name, Email=email, Phone=phone, Post=post,
                                                      District=district, Place=place, Pin=pin,
-                                                     Latitude=coordinates.split(',')[0], Longitude=coordinates.split(',')[1], )
+                                                     Latitude=coordinates.split(',')[0],
+                                                     Longitude=coordinates.split(',')[1], )
+
         return redirect(view_stations)
 
 
@@ -281,7 +291,7 @@ def send_notification(request):
             n_content=notification_text
         )
 
-        messages.success(request, 'Complaint submitted successfully.')
+        messages.success(request, 'Notification sent successfully.')
         return redirect('send_notification')
 
     return render(request, 'notification.html')
@@ -311,4 +321,3 @@ def Delete_notification(req, notification_id):
     notification_data.delete()
     messages.error(req, "deleted successfully")
     return redirect(view_notification_admin)
-

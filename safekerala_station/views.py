@@ -41,6 +41,7 @@ def save_station_add_labour(req):
                                                lb_photo1=photo1, lb_photo2=photo2, lb_category=category,
                                                lb_gender=gender, lb_dob=dob, station=station)
         obj_save_station_add_labour.save()
+        messages.success(req, 'Added Labour Successfully...!')
         return redirect(station_add_labour)
 
 
@@ -152,6 +153,7 @@ def save_station_add_criminal(req):
             cr_case=cr_case, cr_action=cr_action, station=station
         )
         obj_save_station_add_criminal.save()
+        messages.success(req, 'Succefully Added the Criminal Data...!')
 
         return redirect('station_add_criminal')  # Adjust the URL name as per your configuration
 
@@ -256,7 +258,7 @@ def view_reported_labours_and_take_action(request):
         except ReportDB.DoesNotExist:
             # Handle the case where the specified report_id does not exist
             pass
-
+        messages.success(request, 'blocked successfully!')
     return render(request, "view_reported_labours.html", {'reports': reports, 'data': Action})
 
 
@@ -324,7 +326,7 @@ def save_station_edit_profile(req):
         StationsDB.objects.filter(id=station_id).update(StationName=name, Email=email, Phone=phone, Post=post,
                                                         District=district, Place=place,
                                                         Pin=pin, Latitude=latitude, Longitude=longitude)
-
+        messages.success(req, 'updated successfully.')
         return redirect(station_view_profile)
 
 

@@ -14,7 +14,7 @@
 <body>
 
 <h1 class="text-dark text-center pb-5">Add Police Station</h1>
-<form id="form1" name="form1" method="post" action="{% url 'save_station_data' %}">
+<form id="form1" name="form1" method="post" action="{% url 'save_station_data' %}#main">
     {% csrf_token %}
     <table class="table table-bordered table-striped">
         <tr>
@@ -102,6 +102,32 @@
         });
     }
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% if messages %}
+    {% for i in messages %}
+        {% if i.tags == 'warning' %}
+            <script>
+                swal('{{i}}','','warning')
+            </script>
+        {% elif  i.tags == 'error' %}
+            <script>
+                swal('{{i}}','','error')
+            </script>
+        {% elif i.tags == 'success' %}
+            <script>
+                swal('{{i}}','','success')
+            </script>
+        {% else %}
+            <script>
+                swal('{{i}}','','info')
+            </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
 </body>
 </html>
 {% endblock %}
