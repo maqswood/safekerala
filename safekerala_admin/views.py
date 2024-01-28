@@ -18,7 +18,7 @@ from safekerala_user.views import usr_index
 # Create your views here.
 
 def LoginAdmin(req):
-    return render(req, "login_admin.html")
+    return render(req, "index.html")
 
 
 def save_usr_registration(req):
