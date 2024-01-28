@@ -62,6 +62,7 @@ class LabourDB(models.Model):
     lb_dob = models.DateField(null=True, blank=True)
     station = models.ForeignKey(StationsDB, on_delete=models.CASCADE, null=True, blank=True)
     is_blocked = models.BooleanField(default=False)
+    face_data = models.BinaryField(null=True, blank=True)
 
 
 class BlockedLabourDB(models.Model):

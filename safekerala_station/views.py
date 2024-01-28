@@ -1,8 +1,10 @@
 from datetime import datetime
 
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.core.files.storage import FileSystemStorage
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
 from safekerala_admin.models import LabourDB, CriminalDB, ComplaintDB, FeedbackDB, NotificationDB, StationsDB, ActionDB, \
@@ -36,6 +38,7 @@ def save_station_add_labour(req):
         id_proof = req.FILES['id_proof']
         station_id = req.session.get('station_id')
         station = StationsDB.objects.get(id=station_id)
+
         obj_save_station_add_labour = LabourDB(lb_name=name, lb_email=email, lb_phone=phone, lb_id_proof=id_proof,
                                                lb_place=place, lb_post=post, lb_district=district, lb_pincode=pin,
                                                lb_photo1=photo1, lb_photo2=photo2, lb_category=category,
@@ -43,6 +46,36 @@ def save_station_add_labour(req):
         obj_save_station_add_labour.save()
         messages.success(req, 'Added Labour Successfully...!')
         return redirect(station_add_labour)
+
+
+def recognize_face(request):
+    if request.method == 'POST':
+        uploaded_image = request.FILES.get('photo')
+
+        if uploaded_image:
+            # Process the uploaded image to extract facial data using OpenCV
+            image_data = cv2.imread(uploaded_image.path)
+            input_face_data = process_facial_data(image_data)
+
+            # Search for matching faces in the database
+            matched_labour = LabourDB.objects.filter(face_data=input_face_data).first()
+
+            if matched_labour:
+                # Return details if a match is found
+                return JsonResponse({
+                    'status': 'success',
+                    'details': {
+                        'name': matched_labour.lb_name,
+                        'email': matched_labour.lb_email,
+                        'phone': matched_labour.lb_phone,
+                        # Include other fields as needed
+                    }
+                })
+            else:
+                # Return failure status if no match is found
+                return JsonResponse({'status': 'failure'})
+
+    return JsonResponse({'status': 'error'})
 
 
 def station_labour_view(req):

@@ -29,6 +29,57 @@
     <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" media="all"/>
 
     <script src="https://kit.fontawesome.com/5c23664b7a.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+Wy8jT+5t9PZHbL8I5L6fOidREBtKNK9S"
+          crossorigin="anonymous">
+
+    <!-- Bootstrap JS (Add this if you haven't included it already) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+            integrity="sha384-s9YfHc74JJQ6Y58s59pWAF/lxXNqU5vNT5BsyF5RMFpA/EAbl3UJ5MOH81jSM5Z"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+Wy8jT+5t9PZHbL8I5L6fOidREBtKNK9S"
+            crossorigin="anonymous"></script>
+
+    <!-- Additional script for the live camera -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var takePhotoBtn = document.getElementById("takePhotoBtn");
+            var modalVideo = document.getElementById("modalVideo");
+            var modal = new bootstrap.Modal(document.getElementById('cameraModal'));
+
+            // Add click event listener to the "Take a Photo" button
+            takePhotoBtn.addEventListener("click", function () {
+                // Access the user's camera
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia({ video: true })
+                        .then(function (stream) {
+                            modalVideo.srcObject = stream;
+                            modal.show();
+                        })
+                        .catch(function (error) {
+                            console.error("Error accessing camera:", error);
+                        });
+                } else {
+                    console.error("getUserMedia is not supported in this browser");
+                }
+            });
+
+            // Event listener to close the modal
+            modal._element.addEventListener('hidden.bs.modal', function () {
+                // Stop the video stream when the modal is closed
+                var stream = modalVideo.srcObject;
+                var tracks = stream.getTracks();
+                tracks.forEach(function (track) {
+                    track.stop();
+                });
+                modalVideo.srcObject = null;
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -89,15 +140,34 @@
                     {% endif %}</h1>
                 <h2>We are a team of safe kerala ,<br>
                     We work for Public safety</h2>
+<!--                <button id="takePhotoBtn">Take a Photo</button>-->
+        
             </div>
             <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-in" data-aos-delay="200">
                 <img src="{% static 'img/1702194718243dy24kd2l.png' %}" class="img-fluid animated" alt="">
             </div>
         </div>
     </div>
+
 </section><!-- End Hero -->
 <main id="main" class="container">
     {% block content %}
+    <div class="modal" id="cameraModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Camera Feed</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <video id="modalVideo" width="100%" height="auto" autoplay playsinline></video>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
     <section id="about" class="about">
         <div class="container" data-aos="fade-up">
 
@@ -198,6 +268,7 @@
                 </div>
             </div>
         </div>
+
     </section>
     <!-- End Why Us Section -->
     {% endblock %}
@@ -253,6 +324,7 @@
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
         class="bi bi-arrow-up-short"></i></a>
 
+
 <!-- Vendor JS Files -->
 <script src="{% static 'vendor/aos/aos.js' %}"></script>
 <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
@@ -289,8 +361,6 @@
 {% endif %}
 {% endfor %}
 {% endif %}
-
-
 </body>
 
 </html>

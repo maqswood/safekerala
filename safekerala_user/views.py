@@ -163,7 +163,7 @@ def send_complaint(request):
             c_date=current_date,
             c_complaint=complaint_text,
             u_loginid=user_instance,
-            c_status='Pending'  # Assuming a default status
+            c_status='Pending......!'  # Assuming a default status
         )
 
         messages.success(request, 'Complaint submitted successfully.')
